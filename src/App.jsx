@@ -1,6 +1,8 @@
-import { useState,useCallback,useEffect } from 'react'
+import { useState,useCallback,useEffect,useRef } from 'react'
 import './App.css'
 import './index.css'
+
+
 
 function App() {
   const [length,setLength] = useState(8)
@@ -31,10 +33,18 @@ function App() {
     passwordGenerator()
   },[length,char,number,passwordGenerator])
 
+  const copyPassword = useCallback(()=>{
+    passwordRef.current.select()
+    window.navigator.clipboard.writeText(password)
+  },[password])
+
+  //useRef hook
+  const passwordRef = useRef(null)
+
   return (
     <>
       <div className="grid place-items-center h-screen">
-        <div className="w-full max-w-md mx-5 my-5 h-auto bg-gray-600 text-amber-100 font-bold text-xl rounded-2xl shadow-2xl shadow-black p-4 ">
+        <div className="w-full max-w-md mx-5 my-5 h-auto bg-orange-500 text-amber-100 font-bold text-xl rounded-2xl shadow-2xl shadow-orange-500/50 p-8 ">
           <h1 className="text-center font-black text-2xl">
             Password Generator
           </h1>
@@ -45,13 +55,19 @@ function App() {
               className="outline-none w-full py-1 px-3 bg-amber-50 rounded-l-lg text-black"
               placeholder="password"
               readOnly
+              ref={passwordRef}
             />
-            <button className="bg-yellow-400 px-2 rounded-r-lg">Copy</button>
+            <button
+              onClick={copyPassword}
+              className="bg-indigo-300 px-2 rounded-r-lg cursor-pointer hover:text-white hover:inset-shadow-sm hover:inset-shadow-indigo-600"
+            >
+              Copy
+            </button>
           </div>
           <div className="flex text-lg flex-col">
             <input
               type="range"
-              className="cursor-pointer accent-yellow-300"
+              className="cursor-pointer accent-indigo-300"
               min={6}
               max={20}
               value={length}
@@ -60,12 +76,12 @@ function App() {
               }}
             />
             <label>Length:{length}</label>
-            
-            <div className='flex gap-2'>
+
+            <div className="flex gap-2">
               <input
                 type="checkbox"
                 defaultChecked={number}
-                className='accent-yellow-300 w-4.5'
+                className="accent-indigo-300 w-4.5"
                 id="numberInput"
                 onChange={() => {
                   setNumber((prev) => !prev);
@@ -74,11 +90,11 @@ function App() {
               <label htmlFor="numberInput">Numbers</label>
             </div>
 
-            <div className='flex gap-2'>
+            <div className="flex gap-2">
               <input
                 type="checkbox"
                 defaultChecked={char}
-                className='accent-yellow-300 w-4.5'
+                className="accent-indigo-300 w-4.5"
                 id="charInput"
                 onChange={() => {
                   setChar((prev) => !prev);
